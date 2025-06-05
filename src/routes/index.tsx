@@ -1,10 +1,12 @@
 import { useAuthStore } from '../stores/userStore'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import {
   useNavigate,
   Navigate,
   createBrowserRouter,
 } from 'react-router-dom'
+
+import Home from '../pages/Home'
 
 
 function RequireAuth({ children }: { children: React.ReactNode }) {
@@ -50,7 +52,9 @@ function RequireAuth({ children }: { children: React.ReactNode }) {
 export const router = createBrowserRouter([
     {
       path: '/',
-      element: <RequireAuth><홈화면으로 떨구기 /></RequireAuth>,
+      element: <RequireAuth>
+        <Home />
+      </RequireAuth>,
     },
   ])
   
