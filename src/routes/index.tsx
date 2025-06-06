@@ -14,6 +14,7 @@ import Payments from "../pages/Payments/Payments";
 import Toastbox from "../pages/Toastbox/Toastbox";
 import Filter from "../pages/Filter/Filter";
 import Review from "../pages/Review/Review";
+import Notification from "../pages/Notification/Notification";
 
 import { fetchWithRefresh } from "../utils/fetchWithRefresh";
 
@@ -130,14 +131,8 @@ export const router = createBrowserRouter([
     path: "/review",
     element: <Review />,
   },
-  // {
-  //   path: "/notification",
-  //   element: <User />,
-  // },
+  {
+    path: "/notification",
+    element: <Notification />,
+  },
 ]);
-
-
-// { text: "필터링 단어 관리", onClick: () => navigate('/filter') },
-// { text: "리뷰 관리", onClick: () => navigate('/review') },
-// { text: "공지알림 전송", onClick: () => navigate('/notification') },
-// { text: "로그아웃", onClick: () => handleLogout() },
