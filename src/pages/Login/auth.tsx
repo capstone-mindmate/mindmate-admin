@@ -3,12 +3,15 @@ import { useNavigate } from 'react-router-dom'
 import { setTokenCookie } from '../../utils/fetchWithRefresh'
 import { useAuthStore } from '../../stores/userStore'
 import { fetchWithRefresh } from '../../utils/fetchWithRefresh'
+import { jwtDecode } from 'jwt-decode'
+
+interface JwtPayload {
+  role: string
+}
 
 const Auth = () => {
   const navigate = useNavigate()
   const { setUser, setUserEmail } = useAuthStore()
-
-  const exceptEmail = ["ajoumindmate@gmail.com", "nowijnah@ajou.ac.kr", "a856412@gmail.com", "joedaehui@ajou.ac.kr", "skfnxhjjj@ajou.ac.kr"]
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -20,6 +23,13 @@ const Auth = () => {
       if (token && refreshToken) {
         setTokenCookie(token, 'accessToken')
         setTokenCookie(refreshToken, 'refreshToken')
+
+        const decodedToken = jwtDecode(token)
+        const userRole = (decodedToken as JwtPayload).role
+        if (userRole !== 'ROLE_ADMIN') {
+          navigate('/login')
+          return
+        }
 
         try {
           const res = await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/profiles`, {
@@ -35,13 +45,7 @@ const Auth = () => {
           if (userEmail) {
             setUserEmail(userEmail)
           }
-
-
-          if(exceptEmail.includes(userEmail || '')) {
-            navigate('/home')
-          } else {
-            navigate('/login')
-          }
+          navigate('/home')
         } catch (e) {
           if (e instanceof Error) {
             navigate('/login')
