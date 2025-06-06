@@ -52,7 +52,7 @@ const Review = () => {
         params.push(`page=${reset ? 0 : page}`);
         params.push(`size=${PAGE_SIZE}`);
         const query = params.length ? `?${params.join("&")}` : "";
-        const res = await fetchWithRefresh(`${import.meta.env.VITE_API_LOCAL_URL}/admin/reviews${query}`);
+        const res = await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/reviews${query}`);
         const data: PageReviewResponse = await res.json();
         if (reset) {
             setReviews(data.content);
@@ -100,7 +100,7 @@ const Review = () => {
 
     const handleDelete = async () => {
         if (!modalReview) return;
-        await fetchWithRefresh(`${import.meta.env.VITE_API_LOCAL_URL}/admin/reviews/${modalReview.id}`, {
+        await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/reviews/${modalReview.id}`, {
             method: 'DELETE',
         });
         setModalReview(null);

@@ -19,7 +19,7 @@ const Notification = () => {
         setLoading(true);
         setResult(null);
         try {
-            const res = await fetchWithRefresh(`${import.meta.env.VITE_API_LOCAL_URL}/admin/notifications/announcement`, {
+            const res = await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/notifications/announcement`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

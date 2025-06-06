@@ -42,25 +42,25 @@ const Magazine = () => {
     }, []);
 
     const fetchStats = async () => {
-        const res = await fetchWithRefresh(`${import.meta.env.VITE_API_LOCAL_URL}/admin/magazine/stats/category`);
+        const res = await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/magazine/stats/category`);
         const data = await res.json();
         setStats(data);
     };
 
     const fetchPending = async () => {
-        const res = await fetchWithRefresh(`${import.meta.env.VITE_API_LOCAL_URL}/admin/magazine/pending?page=0&size=100`);
+        const res = await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/magazine/pending?page=0&size=100`);
         const data: PageMagazineResponse = await res.json();
         setPending(data.content);
     };
 
     const handleAccept = async (id: number) => {
-        await fetchWithRefresh(`${import.meta.env.VITE_API_LOCAL_URL}/admin/magazine/${id}/accept`, { method: 'POST' });
+        await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/magazine/${id}/accept`, { method: 'POST' });
         setModalMagazine(null);
         fetchPending();
     };
 
     const handleReject = async (id: number) => {
-        await fetchWithRefresh(`${import.meta.env.VITE_API_LOCAL_URL}/admin/magazine/${id}/reject`, { method: 'POST' });
+        await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/magazine/${id}/reject`, { method: 'POST' });
         setModalMagazine(null);
         fetchPending();
     };

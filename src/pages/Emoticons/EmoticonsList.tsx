@@ -25,7 +25,7 @@ const EmoticonsList = () => {
 
     useEffect(() => {
         const fetchEmoticons = async () => {
-            const response = await fetchWithRefresh(`${import.meta.env.VITE_API_LOCAL_URL}/emoticons/popular/viewed?limit=100`);
+            const response = await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/emoticons/popular/viewed?limit=100`);
             const data = await response.json();
             setEmoticons(data);
         };
@@ -54,7 +54,7 @@ const EmoticonsList = () => {
                                 <TableCell>{emoticon.id}</TableCell>
                                 <TableCell>
                                     <img 
-                                        src={`${import.meta.env.VITE_API_LOCAL_URL}` + emoticon.imageUrl} 
+                                        src={`${import.meta.env.VITE_API_SERVER_URL}` + emoticon.imageUrl} 
                                         alt={`이모티콘 ${emoticon.id}`}
                                         style={{ width: '50px', height: '50px', cursor: 'pointer' }}
                                     />

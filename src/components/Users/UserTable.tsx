@@ -36,7 +36,7 @@ const UserTable = () => {
     useEffect(() => {
 
         const fetchUsers = async () => {
-            const response = await fetchWithRefresh(`${import.meta.env.VITE_API_LOCAL_URL}/admin/users/suspended`, {
+            const response = await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/users/suspended`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

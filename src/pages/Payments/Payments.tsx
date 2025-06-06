@@ -35,7 +35,7 @@ const Payments = () => {
     useEffect(() => { fetchProducts(); }, []);
 
     const fetchProducts = async () => {
-        const res = await fetchWithRefresh(`${import.meta.env.VITE_API_LOCAL_URL}/admin/products`);
+        const res = await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/products`);
         const data = await res.json();
         setProducts(data);
     };
@@ -58,7 +58,7 @@ const Payments = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        await fetchWithRefresh(`${import.meta.env.VITE_API_LOCAL_URL}/admin/products`, {
+        await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/products`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -88,7 +88,7 @@ const Payments = () => {
 
     const handleUpdate = async () => {
         if (!modalProduct) return;
-        await fetchWithRefresh(`${import.meta.env.VITE_API_LOCAL_URL}/admin/products/${modalProduct.productId}`, {
+        await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/products/${modalProduct.productId}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -106,7 +106,7 @@ const Payments = () => {
 
     const handleDelete = async () => {
         if (!modalProduct) return;
-        await fetchWithRefresh(`${import.meta.env.VITE_API_LOCAL_URL}/admin/products/${modalProduct.productId}`, {
+        await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/products/${modalProduct.productId}`, {
             method: 'DELETE',
         });
         setModalProduct(null);

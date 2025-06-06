@@ -35,13 +35,13 @@ const Toastbox = () => {
     useEffect(() => { fetchKeywords(); }, []);
 
     const fetchKeywords = async () => {
-        const res = await fetchWithRefresh(`${import.meta.env.VITE_API_LOCAL_URL}/admin/toast-box/keywords`);
+        const res = await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/toast-box/keywords`);
         const data = await res.json();
         setKeywords(data);
     };
 
     const refreshKeywords = async () => {
-        await fetchWithRefresh(`${import.meta.env.VITE_API_LOCAL_URL}/admin/toast-box/keywords/refresh`, { method: 'POST' });
+        await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/toast-box/keywords/refresh`, { method: 'POST' });
         fetchKeywords();
     };
 
@@ -58,7 +58,7 @@ const Toastbox = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!form.keyword.trim()) return;
-        await fetchWithRefresh(`${import.meta.env.VITE_API_LOCAL_URL}/admin/toast-box/keywords`, {
+        await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/toast-box/keywords`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(form),
@@ -80,7 +80,7 @@ const Toastbox = () => {
 
     const handleUpdate = async () => {
         if (!modalKeyword) return;
-        await fetchWithRefresh(`${import.meta.env.VITE_API_LOCAL_URL}/admin/toast-box/keywords/${modalKeyword.id}`, {
+        await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/toast-box/keywords/${modalKeyword.id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(editForm),
@@ -91,7 +91,7 @@ const Toastbox = () => {
 
     const handleDelete = async () => {
         if (!modalKeyword) return;
-        await fetchWithRefresh(`${import.meta.env.VITE_API_LOCAL_URL}/admin/toast-box/keywords/${modalKeyword.id}`, {
+        await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/toast-box/keywords/${modalKeyword.id}`, {
             method: 'DELETE',
         });
         setModalKeyword(null);
@@ -100,7 +100,7 @@ const Toastbox = () => {
 
     const handleActivate = async () => {
         if (!modalKeyword) return;
-        await fetchWithRefresh(`${import.meta.env.VITE_API_LOCAL_URL}/admin/toast-box/keywords/${modalKeyword.id}/activate`, {
+        await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/toast-box/keywords/${modalKeyword.id}/activate`, {
             method: 'PUT',
         });
         setModalKeyword(null);
@@ -109,7 +109,7 @@ const Toastbox = () => {
 
     const handleDeactivate = async () => {
         if (!modalKeyword) return;
-        await fetchWithRefresh(`${import.meta.env.VITE_API_LOCAL_URL}/admin/toast-box/keywords/${modalKeyword.id}/deactivate`, {
+        await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/toast-box/keywords/${modalKeyword.id}/deactivate`, {
             method: 'PUT',
         });
         setModalKeyword(null);

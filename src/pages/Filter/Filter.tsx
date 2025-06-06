@@ -28,13 +28,13 @@ const Filter = () => {
     useEffect(() => { fetchWords(); }, []);
 
     const fetchWords = async () => {
-        const res = await fetchWithRefresh(`${import.meta.env.VITE_API_LOCAL_URL}/admin/filtering/words`);
+        const res = await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/filtering/words`);
         const data = await res.json();
         setWords(data);
     };
 
     const refreshWords = async () => {
-        await fetchWithRefresh(`${import.meta.env.VITE_API_LOCAL_URL}/admin/filtering/words/refresh`, { method: 'POST' });
+        await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/filtering/words/refresh`, { method: 'POST' });
         fetchWords();
     };
 
@@ -51,7 +51,7 @@ const Filter = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!form.word.trim()) return;
-        await fetchWithRefresh(`${import.meta.env.VITE_API_LOCAL_URL}/admin/filtering/words`, {
+        await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/filtering/words`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(form),
@@ -67,7 +67,7 @@ const Filter = () => {
 
     const handleUpdate = async () => {
         if (!modalWord) return;
-        await fetchWithRefresh(`${import.meta.env.VITE_API_LOCAL_URL}/admin/filtering/words/${modalWord.id}`, {
+        await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/filtering/words/${modalWord.id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(editForm),
@@ -78,7 +78,7 @@ const Filter = () => {
 
     const handleDelete = async () => {
         if (!modalWord) return;
-        await fetchWithRefresh(`${import.meta.env.VITE_API_LOCAL_URL}/admin/filtering/words/${modalWord.id}`, {
+        await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/filtering/words/${modalWord.id}`, {
             method: 'DELETE',
         });
         setModalWord(null);
@@ -87,7 +87,7 @@ const Filter = () => {
 
     const handleActivate = async () => {
         if (!modalWord) return;
-        await fetchWithRefresh(`${import.meta.env.VITE_API_LOCAL_URL}/admin/filtering/words/${modalWord.id}/activate`, {
+        await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/filtering/words/${modalWord.id}/activate`, {
             method: 'PUT',
         });
         setModalWord(null);
@@ -96,7 +96,7 @@ const Filter = () => {
 
     const handleDeactivate = async () => {
         if (!modalWord) return;
-        await fetchWithRefresh(`${import.meta.env.VITE_API_LOCAL_URL}/admin/filtering/words/${modalWord.id}/deactivate`, {
+        await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/filtering/words/${modalWord.id}/deactivate`, {
             method: 'PUT',
         });
         setModalWord(null);

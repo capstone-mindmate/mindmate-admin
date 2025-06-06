@@ -52,7 +52,7 @@ const Emoticons = () => {
 
     const fetchPendingEmoticons = async () => {
         try {
-            const response = await fetchWithRefresh(`${import.meta.env.VITE_API_LOCAL_URL}/admin/emoticons/pending`);
+            const response = await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/emoticons/pending`);
             const data = await response.json();
             setEmoticons(data);
         } catch (error) {
@@ -106,7 +106,7 @@ const Emoticons = () => {
         );
 
         try {
-            await fetchWithRefresh(`${import.meta.env.VITE_API_LOCAL_URL}/emoticons/upload`, {
+            await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/emoticons/upload`, {
                 method: 'POST',
                 body: formData,
             });
@@ -120,7 +120,7 @@ const Emoticons = () => {
 
     const handleAccept = async (emoticonId: number) => {
         try {
-            await fetchWithRefresh(`${import.meta.env.VITE_API_LOCAL_URL}/admin/emoticons/${emoticonId}/accept`, {
+            await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/emoticons/${emoticonId}/accept`, {
                 method: 'POST',
             });
             setIsModalOpen(false);
@@ -132,7 +132,7 @@ const Emoticons = () => {
 
     const handleReject = async (emoticonId: number) => {
         try {
-            await fetchWithRefresh(`${import.meta.env.VITE_API_LOCAL_URL}/admin/emoticons/${emoticonId}/reject`, {
+            await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/emoticons/${emoticonId}/reject`, {
                 method: 'POST',
             });
             setIsModalOpen(false);
@@ -212,7 +212,7 @@ const Emoticons = () => {
                                 <TableCell>{emoticon.id}</TableCell>
                                 <TableCell>
                                     <img 
-                                        src={`${import.meta.env.VITE_API_LOCAL_URL}` + emoticon.imageUrl} 
+                                        src={`${import.meta.env.VITE_API_SERVER_URL}` + emoticon.imageUrl} 
                                         alt={`이모티콘 ${emoticon.id}`}
                                         style={{ width: '50px', height: '50px', cursor: 'pointer' }}
                                     />
@@ -246,7 +246,7 @@ const Emoticons = () => {
                     <Modal onClick={() => setIsModalOpen(false)}>
                         <ModalContent onClick={e => e.stopPropagation()}>
                             <ModalImage 
-                                src={`${import.meta.env.VITE_API_LOCAL_URL}` + selectedEmoticon.imageUrl} 
+                                src={`${import.meta.env.VITE_API_SERVER_URL}` + selectedEmoticon.imageUrl} 
                                 alt={`이모티콘 ${selectedEmoticon.id}`}
                             />
                             <div style={{ marginBottom: '20px' }}>

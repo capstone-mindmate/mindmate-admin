@@ -22,7 +22,7 @@ const Auth = () => {
         setTokenCookie(refreshToken, 'refreshToken')
 
         try {
-          const res = await fetchWithRefresh(`${import.meta.env.VITE_API_LOCAL_URL}/profiles`, {
+          const res = await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/profiles`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
           })
