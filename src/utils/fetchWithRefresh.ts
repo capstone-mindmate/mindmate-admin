@@ -26,7 +26,6 @@ export async function fetchWithRefresh(input: RequestInfo, init?: RequestInit) {
     ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
   }
 
-  // FormData일 경우 Content-Type 헤더 제거 (브라우저가 자동 생성)
   if (init?.body instanceof FormData) {
     if ('Content-Type' in headers) {
       delete headers['Content-Type']
@@ -76,12 +75,33 @@ export async function fetchWithRefresh(input: RequestInfo, init?: RequestInit) {
         ) {
           window.clearUser()
         }
-        // alert('세션이 만료되었습니다. 다시 로그인 해주세요.')
+
+
         localStorage.clear()
-        window.location.href = '/onboarding'
+        window.location.href = '/login'
       }
       throw new Error('토큰 갱신 실패')
     }
   }
   return res
+}
+
+
+// JWT 디코드 함수 (exp 등 payload 추출)
+export function decodeJWT(token: string): {
+  exp: number
+  iat: number
+  sub: string
+  email: string
+  name: string
+} | null {
+  try {
+    const payload = token.split('.')[1]
+    // 이전 코드의 Base64URL-safe 디코딩 로직을 다시 추가
+    const decoded = atob(payload.replace(/-/g, '+').replace(/_/g, '/'))
+    return JSON.parse(decoded)
+  } catch (e: unknown) {
+    console.error("Error! : ", e);
+    return null
+  }
 }
