@@ -13,6 +13,7 @@ import Magazine from "../pages/Magazine/Magazine";
 import Payments from "../pages/Payments/Payments";  
 import Toastbox from "../pages/Toastbox/Toastbox";
 import Filter from "../pages/Filter/Filter";
+import Review from "../pages/Review/Review";
 
 import { fetchWithRefresh } from "../utils/fetchWithRefresh";
 
@@ -125,10 +126,10 @@ export const router = createBrowserRouter([
     path: "/filter",
     element: <Filter />,
   },
-  // {
-  //   path: "/review",
-  //   element: <User />,
-  // },
+  {
+    path: "/review",
+    element: <Review />,
+  },
   // {
   //   path: "/notification",
   //   element: <User />,
