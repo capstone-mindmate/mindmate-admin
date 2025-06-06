@@ -204,7 +204,7 @@ const Emoticons = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {emoticons.map((emoticon) => (
+                        {emoticons.length > 0 ? emoticons.map((emoticon) => (
                             <tr key={emoticon.id} onClick={() => {
                                 setSelectedEmoticon(emoticon);
                                 setIsModalOpen(true);
@@ -238,7 +238,7 @@ const Emoticons = () => {
                                     </ButtonGroup>
                                 </TableCell>
                             </tr>
-                        ))}
+                        )) : <tr><TableCell colSpan={7} style={{ textAlign: 'center' }}>등록된 이모티콘이 없습니다.</TableCell></tr>}
                     </tbody>
                 </EmoticonTable>
 

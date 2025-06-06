@@ -9,6 +9,9 @@ import Users from "../pages/Users/Users";
 import Report from "../pages/Reports/Report";
 import Emoticons from "../pages/Emoticons/Emoticons";
 import EmoticonsList from "../pages/Emoticons/EmoticonsList"
+import Magazine from "../pages/Magazine/Magazine";
+import Payments from "../pages/Payments/Payments";  
+import Toastbox from "../pages/Toastbox/Toastbox";
 
 import { fetchWithRefresh } from "../utils/fetchWithRefresh";
 
@@ -105,18 +108,18 @@ export const router = createBrowserRouter([
     path: "/emoticons_list",
     element: <EmoticonsList />,
   },
-  // {
-  //   path: "/magazine",
-  //   element: <User />,
-  // },
-  // {
-  //   path: "/toastbox",
-  //   element: <User />,
-  // },
-  // {
-  //   path: "/payment",
-  //   element: <User />,
-  // },
+  {
+    path: "/magazine",
+    element: <Magazine />,
+  },
+  {
+    path: "/toastbox",
+    element: <Toastbox />,
+  },
+  {
+    path: "/payments",
+    element: <Payments />,
+  },
   // {
   //   path: "/filter",
   //   element: <User />,

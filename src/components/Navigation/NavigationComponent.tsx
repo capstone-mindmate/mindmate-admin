@@ -33,7 +33,7 @@ export default function NavigationComponent() {
     { text: "이모티콘 관리", onClick: () => navigate('/emoticons') },
     { text: "매거진 관리", onClick: () => navigate('/magazine') },
     { text: "토스트박스 키워드 관리", onClick: () => navigate('/toastbox') },
-    { text: "결제 상품 관리", onClick: () => navigate('/payment') },
+    { text: "결제 상품 관리", onClick: () => navigate('/payments') },
     { text: "필터링 단어 관리", onClick: () => navigate('/filter') },
     { text: "리뷰 관리", onClick: () => navigate('/review') },
     { text: "공지알림 전송", onClick: () => navigate('/notification') },

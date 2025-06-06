@@ -49,7 +49,7 @@ const EmoticonsList = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {emoticons.map((emoticon) => (
+                        {emoticons.length > 0 ? emoticons.map((emoticon) => (
                             <tr key={emoticon.id}>
                                 <TableCell>{emoticon.id}</TableCell>
                                 <TableCell>
@@ -62,7 +62,7 @@ const EmoticonsList = () => {
                                 <TableCell>{emoticon.name}</TableCell>
                                 <TableCell>{emoticon.price.toLocaleString()}코인</TableCell>
                             </tr>
-                        ))}
+                        )) : <tr><TableCell colSpan={4} style={{ textAlign: 'center' }}>등록된 이모티콘이 없습니다.</TableCell></tr>}
                     </tbody>
                 </EmoticonTable>
             </EmoticonContent>
