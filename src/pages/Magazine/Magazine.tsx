@@ -11,17 +11,31 @@ import { fetchWithRefresh } from '../../utils/fetchWithRefresh';
 
 Chart.register(ArcElement, Tooltip, Legend);
 
-interface MagazineCategoryStatistics {
-    category: string;
-    count: number;
+interface MagazineContentType {
+    id: number;
+    type: string;
+    text: string | null;
+    imageUrl: string | null;
+    emoticonUrl: string | null;
+    emoticonName: string | null;
+    contentOrder: number;
 }
 interface Magazine {
     id: number;
     title: string;
-    author: string;
+    subtitle: string;
+    contents: MagazineContentType[];
+    authorName: string;
+    authorId: number;
+    likeCount: number;
+    status: string;
     category: string;
     createdAt: string;
-    content: string;
+    updatedAt: string;
+}
+interface MagazineCategoryStatistics {
+    category: string;
+    count: number;
 }
 interface PageMagazineResponse {
     content: Magazine[];
@@ -53,14 +67,11 @@ const Magazine = () => {
         setPending(data.content);
     };
 
-    const handleAccept = async (id: number) => {
-        await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/magazine/${id}/accept`, { method: 'POST' });
-        setModalMagazine(null);
-        fetchPending();
-    };
-
-    const handleReject = async (id: number) => {
-        await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/magazine/${id}/reject`, { method: 'POST' });
+    const handleDecision = async (id: number, isAccepted: boolean) => {
+        await fetchWithRefresh(
+            `${import.meta.env.VITE_API_SERVER_URL}/admin/magazine/${id}?isAccepted=${isAccepted}`,
+            { method: 'POST' }
+        );
         setModalMagazine(null);
         fetchPending();
     };
@@ -90,43 +101,57 @@ const Magazine = () => {
                             <TableHeader>제목</TableHeader>
                             <TableHeader>카테고리</TableHeader>
                             <TableHeader>작성자</TableHeader>
+                            <TableHeader>좋아요</TableHeader>
                             <TableHeader>등록일</TableHeader>
                             <TableHeader>작업</TableHeader>
                         </tr>
                     </thead>
                     <tbody>
-                        {
-                        pending.length > 0 ? pending.map(magazine => (
+                        {pending.length > 0 ? pending.map(magazine => (
                             <tr key={magazine.id} style={{ cursor: 'pointer' }} onClick={() => setModalMagazine(magazine)}>
                                 <TableCell>{magazine.id}</TableCell>
                                 <TableCell>{magazine.title}</TableCell>
                                 <TableCell>{magazine.category}</TableCell>
-                                <TableCell>{magazine.author}</TableCell>
+                                <TableCell>{magazine.authorName}</TableCell>
+                                <TableCell>{magazine.likeCount}</TableCell>
                                 <TableCell>{new Date(magazine.createdAt).toLocaleDateString()}</TableCell>
                                 <TableCell onClick={e => e.stopPropagation()}>
                                     <ButtonGroup>
-                                        <ActionButton variant="accept" onClick={() => handleAccept(magazine.id)}>승인</ActionButton>
-                                        <ActionButton variant="reject" onClick={() => handleReject(magazine.id)}>거절</ActionButton>
+                                        <ActionButton variant="accept" onClick={() => handleDecision(magazine.id, true)}>승인</ActionButton>
+                                        <ActionButton variant="reject" onClick={() => handleDecision(magazine.id, false)}>거절</ActionButton>
                                     </ButtonGroup>
                                 </TableCell>
                             </tr>
-                        )) : <tr><TableCell colSpan={6} style={{ textAlign: 'center' }}>등록된 매거진이 없습니다.</TableCell></tr>}
+                        )) : <tr><TableCell colSpan={7} style={{ textAlign: 'center' }}>등록된 매거진이 없습니다.</TableCell></tr>}
                     </tbody>
                 </MagazineTable>
                 {modalMagazine && (
                     <Modal onClick={() => setModalMagazine(null)}>
                         <ModalContent onClick={e => e.stopPropagation()}>
                             <h2>{modalMagazine.title}</h2>
-                            <p><b>카테고리:</b> {modalMagazine.category}</p>
-                            <p><b>작성자:</b> {modalMagazine.author}</p>
-                            <p><b>등록일:</b> {new Date(modalMagazine.createdAt).toLocaleString()}</p>
+                            <p><b>부제목:</b> {modalMagazine.subtitle}</p>
                             <div style={{ margin: '16px 0' }}>
-                                <b>내용:</b>
-                                <div style={{ whiteSpace: 'pre-line', marginTop: 8 }}>{modalMagazine.content}</div>
+                                <b>콘텐츠:</b>
+                                <div style={{ marginTop: 8 }}>
+                                    {modalMagazine.contents.map(content => (
+                                        <div key={content.id} style={{ marginBottom: 12 }}>
+                                            {content.type === 'TEXT' && content.text && (
+                                                <div dangerouslySetInnerHTML={{ __html: content.text }} />
+                                            )}
+                                            {content.type === 'IMAGE' && content.imageUrl && (
+                                                <img
+                                                    src={`${import.meta.env.VITE_API_SERVER_URL}${content.imageUrl}`}
+                                                    alt="매거진 이미지"
+                                                    style={{ maxWidth: 300, display: 'block', margin: '8px 0' }}
+                                                />
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                             <ButtonGroup>
-                                <ActionButton variant="accept" onClick={() => handleAccept(modalMagazine.id)}>승인</ActionButton>
-                                <ActionButton variant="reject" onClick={() => handleReject(modalMagazine.id)}>거절</ActionButton>
+                                <ActionButton variant="accept" onClick={() => handleDecision(modalMagazine.id, true)}>승인</ActionButton>
+                                <ActionButton variant="reject" onClick={() => handleDecision(modalMagazine.id, false)}>거절</ActionButton>
                             </ButtonGroup>
                         </ModalContent>
                     </Modal>
