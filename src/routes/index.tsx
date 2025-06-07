@@ -1,6 +1,7 @@
 import { useAuthStore } from "../stores/userStore";
 import { useEffect } from "react";
 import { useNavigate, Navigate, createBrowserRouter } from "react-router-dom";
+import { jwtDecode } from 'jwt-decode'
 
 import Home from "../pages/Home/Home";
 import Login from "../pages/Login/Login";
@@ -18,6 +19,10 @@ import Notification from "../pages/Notification/Notification";
 
 import { fetchWithRefresh } from "../utils/fetchWithRefresh";
 
+interface JwtPayload {
+  role: string
+}
+
 function RequireAuth({ children }: { children: React.ReactNode }) {
   const { user, hydrated, setUser } = useAuthStore();
   const navigate = useNavigate();
@@ -29,6 +34,17 @@ function RequireAuth({ children }: { children: React.ReactNode }) {
         const raw = localStorage.getItem("auth-store");
         if (raw) {
           try {
+            const token = localStorage.getItem("accessToken");
+            if (!token) {
+              navigate('/login')
+              return
+            }
+            const decodedToken = jwtDecode(token);
+            const userRole = (decodedToken as JwtPayload).role
+            if (userRole !== 'ROLE_ADMIN') {
+              navigate('/login')
+              return
+            } 
             const profileRes = await fetchWithRefresh(`${import.meta.env.VITE_API_URL}/profile`,
               {
                 method: "GET",
@@ -97,42 +113,82 @@ export const router = createBrowserRouter([
   },
   {
     path: "/users",
-    element: <Users />,
+    element: (
+      <RequireAuth>
+        <Users />
+      </RequireAuth>
+    ),
   },
   {
     path: "/report",
-    element: <Report />,
+    element: (
+      <RequireAuth>
+        <Report />
+      </RequireAuth>
+    ),
   },
   {
     path: "/emoticons",
-    element: <Emoticons />,
+    element: (
+      <RequireAuth>
+        <Emoticons />
+      </RequireAuth>
+    ),
   },
   {
     path: "/emoticons_list",
-    element: <EmoticonsList />,
+    element: (
+      <RequireAuth>
+        <EmoticonsList />
+      </RequireAuth>
+    ),
   },
   {
     path: "/magazine",
-    element: <Magazine />,
+    element: (
+      <RequireAuth>
+        <Magazine />
+      </RequireAuth>
+    ),
   },
   {
     path: "/toastbox",
-    element: <Toastbox />,
+    element: (
+      <RequireAuth>
+        <Toastbox />
+      </RequireAuth>
+    ),
   },
   {
     path: "/payments",
-    element: <Payments />,
+    element: (
+      <RequireAuth>
+        <Payments />
+      </RequireAuth>
+    ),
   },
   {
     path: "/filter",
-    element: <Filter />,
+    element: (
+      <RequireAuth>
+        <Filter />
+      </RequireAuth>
+    ),
   },
   {
     path: "/review",
-    element: <Review />,
+    element: (
+      <RequireAuth>
+        <Review />
+      </RequireAuth>
+    ),
   },
   {
     path: "/notification",
-    element: <Notification />,
+    element: (
+      <RequireAuth>
+        <Notification />
+      </RequireAuth>
+    ),
   },
 ]);
