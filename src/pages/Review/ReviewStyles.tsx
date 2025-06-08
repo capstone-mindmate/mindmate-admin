@@ -18,6 +18,7 @@ export const ReviewContent = styled.div`
     align-items: center;
     justify-content: center;
     background-color: white;
+    overflow-y: auto;
 `
 
 export const HeadText = styled.h1`
@@ -80,6 +81,7 @@ export const ReviewsTable = styled.table`
     border-collapse: collapse;
     margin-top: 20px;
     background: #fff;
+    margin-bottom: 100px;
 `;
 
 export const TableHeader = styled.th`

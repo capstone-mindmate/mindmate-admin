@@ -10,10 +10,14 @@ import { fetchWithRefresh } from '../../utils/fetchWithRefresh';
 
 interface Review {
     id: number;
-    user: string;
-    content: string;
+    chatRoomId: number;
+    reviewerId: number;
+    reviewerNickname: string;
+    reviewerProfileImage: string;
+    reviewedProfileId: number;
     rating: number;
-    reported: boolean;
+    comment: string;
+    tags: string[];
     createdAt: string;
 }
 interface PageReviewResponse {
@@ -136,9 +140,9 @@ const Review = () => {
                         <tr>
                             <TableHeader>ID</TableHeader>
                             <TableHeader>작성자</TableHeader>
-                            <TableHeader>내용</TableHeader>
+                            <TableHeader>프로필</TableHeader>
                             <TableHeader>평점</TableHeader>
-                            <TableHeader>신고됨</TableHeader>
+                            <TableHeader>내용</TableHeader>
                             <TableHeader>작성일</TableHeader>
                         </tr>
                     </thead>
@@ -151,10 +155,16 @@ const Review = () => {
                                 onClick={() => { setModalReview(review); setDeleteConfirm(false); }}
                             >
                                 <TableCell>{review.id}</TableCell>
-                                <TableCell>{review.user}</TableCell>
-                                <TableCell>{review.content}</TableCell>
+                                <TableCell>{review.reviewerNickname}</TableCell>
+                                <TableCell>
+                                    <img
+                                        src={`${import.meta.env.VITE_API_SERVER_URL}${review.reviewerProfileImage}`}
+                                        alt="프로필"
+                                        style={{ width: 32, height: 32, borderRadius: '50%' }}
+                                    />
+                                </TableCell>
                                 <TableCell>{review.rating}</TableCell>
-                                <TableCell>{review.reported ? 'Y' : 'N'}</TableCell>
+                                <TableCell>{review.comment}</TableCell>
                                 <TableCell>{new Date(review.createdAt).toLocaleString()}</TableCell>
                             </tr>
                         ))}
@@ -166,10 +176,18 @@ const Review = () => {
                         <ModalContent onClick={e => e.stopPropagation()}>
                             <h2>리뷰 상세</h2>
                             <p><b>ID:</b> {modalReview.id}</p>
-                            <p><b>작성자:</b> {modalReview.user}</p>
-                            <p><b>내용:</b> {modalReview.content}</p>
+                            <p><b>작성자:</b> {modalReview.reviewerNickname}</p>
+                            <p>
+                                <b>프로필:</b><br />
+                                <img
+                                    src={`${import.meta.env.VITE_API_SERVER_URL}${modalReview.reviewerProfileImage}`}
+                                    alt="프로필"
+                                    style={{ width: 64, height: 64, borderRadius: '50%' }}
+                                />
+                            </p>
                             <p><b>평점:</b> {modalReview.rating}</p>
-                            <p><b>신고됨:</b> {modalReview.reported ? 'Y' : 'N'}</p>
+                            <p><b>태그:</b> {modalReview.tags && modalReview.tags.length > 0 ? modalReview.tags.join(', ') : '-'}</p>
+                            <p><b>내용:</b> {modalReview.comment}</p>
                             <p><b>작성일:</b> {new Date(modalReview.createdAt).toLocaleString()}</p>
                             <ButtonGroup>
                                 {!deleteConfirm ? (

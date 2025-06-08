@@ -11,6 +11,7 @@ import Report from "../pages/Reports/Report";
 import Emoticons from "../pages/Emoticons/Emoticons";
 import EmoticonsList from "../pages/Emoticons/EmoticonsList"
 import Magazine from "../pages/Magazine/Magazine";
+import MagazineList from "../pages/Magazine/MagazineList";
 import Payments from "../pages/Payments/Payments";  
 import Toastbox from "../pages/Toastbox/Toastbox";
 import Filter from "../pages/Filter/Filter";
@@ -86,109 +87,122 @@ function RequireAuth({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
-export const router = createBrowserRouter([
+export const router = createBrowserRouter(
+  [
+    {
+      path: "/",
+      element: (
+        <RequireAuth>
+          <Home />
+        </RequireAuth>
+      ),
+    },
+    {
+      path: "/home",
+      element: (
+        <RequireAuth>
+          <Home />
+        </RequireAuth>
+      ),
+    },
+    {
+      path: "/login",
+      element: <Login />,
+    },
+    {
+      path: "/auth",
+      element: <Auth />,
+    },
+    {
+      path: "/users",
+      element: (
+        <RequireAuth>
+          <Users />
+        </RequireAuth>
+      ),
+    },
+    {
+      path: "/report",
+      element: (
+        <RequireAuth>
+          <Report />
+        </RequireAuth>
+      ),
+    },
+    {
+      path: "/emoticons",
+      element: (
+        <RequireAuth>
+          <Emoticons />
+        </RequireAuth>
+      ),
+    },
+    {
+      path: "/emoticons_list",
+      element: (
+        <RequireAuth>
+          <EmoticonsList />
+        </RequireAuth>
+      ),
+    },
+    {
+      path: "/magazine",
+      element: (
+        <RequireAuth>
+          <Magazine />
+        </RequireAuth>
+      ),
+    },
+    {
+      path: "/magazine_list",
+      element: (
+        <RequireAuth>
+          <MagazineList />
+        </RequireAuth>
+      ),
+    },
+    {
+      path: "/toastbox",
+      element: (
+        <RequireAuth>
+          <Toastbox />
+        </RequireAuth>
+      ),
+    },
+    {
+      path: "/payments",
+      element: (
+        <RequireAuth>
+          <Payments />
+        </RequireAuth>
+      ),
+    },
+    {
+      path: "/filter",
+      element: (
+        <RequireAuth>
+          <Filter />
+        </RequireAuth>
+      ),
+    },
+    {
+      path: "/review",
+      element: (
+        <RequireAuth>
+          <Review />
+        </RequireAuth>
+      ),
+    },
+    {
+      path: "/notification",
+      element: (
+        <RequireAuth>
+          <Notification />
+        </RequireAuth>
+      ),
+    },
+  ],
   {
-    path: "/",
-    element: (
-      <RequireAuth>
-        <Home />
-      </RequireAuth>
-    ),
-  },
-  {
-    path: "/home",
-    element: (
-      <RequireAuth>
-        <Home />
-      </RequireAuth>
-    ),
-  },
-  {
-    path: "/login",
-    element: <Login />,
-  },
-  {
-    path: "/auth",
-    element: <Auth />,
-  },
-  {
-    path: "/users",
-    element: (
-      <RequireAuth>
-        <Users />
-      </RequireAuth>
-    ),
-  },
-  {
-    path: "/report",
-    element: (
-      <RequireAuth>
-        <Report />
-      </RequireAuth>
-    ),
-  },
-  {
-    path: "/emoticons",
-    element: (
-      <RequireAuth>
-        <Emoticons />
-      </RequireAuth>
-    ),
-  },
-  {
-    path: "/emoticons_list",
-    element: (
-      <RequireAuth>
-        <EmoticonsList />
-      </RequireAuth>
-    ),
-  },
-  {
-    path: "/magazine",
-    element: (
-      <RequireAuth>
-        <Magazine />
-      </RequireAuth>
-    ),
-  },
-  {
-    path: "/toastbox",
-    element: (
-      <RequireAuth>
-        <Toastbox />
-      </RequireAuth>
-    ),
-  },
-  {
-    path: "/payments",
-    element: (
-      <RequireAuth>
-        <Payments />
-      </RequireAuth>
-    ),
-  },
-  {
-    path: "/filter",
-    element: (
-      <RequireAuth>
-        <Filter />
-      </RequireAuth>
-    ),
-  },
-  {
-    path: "/review",
-    element: (
-      <RequireAuth>
-        <Review />
-      </RequireAuth>
-    ),
-  },
-  {
-    path: "/notification",
-    element: (
-      <RequireAuth>
-        <Notification />
-      </RequireAuth>
-    ),
-  },
-]);
+    basename: '/admin',
+  }
+);
