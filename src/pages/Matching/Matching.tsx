@@ -26,39 +26,55 @@ const MATCHING_CATEGORIES = [
 
 type MatchingCategory = typeof MATCHING_CATEGORIES[number]["value"];
 
-// MatchingResponse 타입 (스웨거 기반)
-interface MatchingResponse {
+type CreatorRole = "SPEAKER" | "LISTENER";
+
+type MatchingListItem = {
     id: number;
     title: string;
     description: string;
     category: MatchingCategory;
-    status: string;
-    createdAt: string;
-    updatedAt: string;
-    ownerId: number;
-    ownerName: string;
-    ownerProfileImage: string;
-    // 필요시 추가
-}
+    department: string;
+    creatorRole: CreatorRole;
+};
 
 interface PageMatchingResponse {
-    content: MatchingResponse[];
+    content: MatchingListItem[];
     totalPages: number;
     totalElements: number;
     size: number;
     number: number;
 }
 
+// 상세 타입
+interface MatchingDetailResponse {
+    id: number;
+    title: string;
+    description: string;
+    category: MatchingCategory;
+    status: "OPEN" | "MATCHED" | "REJECTED" | "CANCELED";
+    createdAt: string;
+    waitingCount: number;
+    anonymous: boolean;
+    showDepartment: boolean;
+    creatorRole: CreatorRole;
+    creatorId: number;
+    creatorNickname: string;
+    creatorProfileImage: string;
+    creatorDepartment: string;
+    creatorCounselingCount: number;
+    creatorAvgRating: number;
+}
+
 const PAGE_SIZE = 20;
 
 const Matching = () => {
     const [category, setCategory] = useState<MatchingCategory>("ACADEMIC");
-    const [matchings, setMatchings] = useState<MatchingResponse[]>([]);
+    const [matchings, setMatchings] = useState<MatchingListItem[]>([]);
     const [page, setPage] = useState(0);
     const [totalPages, setTotalPages] = useState(1);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [modalMatching, setModalMatching] = useState<MatchingResponse | null>(null);
+    const [modalDetail, setModalDetail] = useState<MatchingDetailResponse | null>(null);
     const observer = useRef<IntersectionObserver | null>(null);
     const lastRowRef = useRef<HTMLTableRowElement | null>(null);
 
@@ -72,7 +88,7 @@ const Matching = () => {
                 `size=${PAGE_SIZE}`,
                 `matchingCategory=${category}`
             ].join('&');
-            const res = await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/matchings?${params}`);
+            const res = await fetchWithRefresh(`https://mindmate.shop/api/admin/matchings?${params}`);
             const data: PageMatchingResponse = await res.json();
             if (reset) {
                 setMatchings(data.content);
@@ -113,14 +129,26 @@ const Matching = () => {
         if (lastRowRef.current) observer.current.observe(lastRowRef.current);
     }, [loading, matchings, totalPages, page]);
 
+    // 상세 조회
+    const handleRowClick = async (matchingId: number) => {
+        try {
+            const res = await fetchWithRefresh(`https://mindmate.shop/api/matchings/${matchingId}`);
+            const data: MatchingDetailResponse = await res.json();
+            setModalDetail(data);
+        } catch {
+            setModalDetail(null);
+            alert('상세 정보를 불러오지 못했습니다.');
+        }
+    };
+
     // 반려 처리
     const handleReject = async (matchingId: number) => {
         if (!window.confirm('정말 이 매칭을 반려하시겠습니까?')) return;
         try {
-            await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/matchings/${matchingId}`, {
+            await fetchWithRefresh(`https://mindmate.shop/api/admin/matchings/${matchingId}`, {
                 method: 'PATCH',
             });
-            setModalMatching(null);
+            setModalDetail(null);
             setPage(0);
             fetchMatchings(true);
         } catch {
@@ -153,37 +181,26 @@ const Matching = () => {
                             <TableHeader>ID</TableHeader>
                             <TableHeader>제목</TableHeader>
                             <TableHeader>카테고리</TableHeader>
-                            <TableHeader>상태</TableHeader>
-                            <TableHeader>생성일</TableHeader>
-                            <TableHeader>작성자</TableHeader>
+                            <TableHeader>학과</TableHeader>
+                            <TableHeader>생성자 역할</TableHeader>
                         </tr>
                     </thead>
                     <tbody>
                         {matchings.length === 0 && !loading ? (
-                            <tr><TableCell colSpan={6} style={{ textAlign: 'center' }}>데이터가 없습니다.</TableCell></tr>
+                            <tr><TableCell colSpan={5} style={{ textAlign: 'center' }}>데이터가 없습니다.</TableCell></tr>
                         ) : (
                             matchings.map((matching, idx) => (
                                 <tr
                                     key={matching.id}
                                     ref={idx === matchings.length - 1 ? lastRowRef : undefined}
                                     style={{ cursor: 'pointer' }}
-                                    onClick={() => setModalMatching(matching)}
+                                    onClick={() => handleRowClick(matching.id)}
                                 >
                                     <TableCell>{matching.id}</TableCell>
                                     <TableCell>{matching.title}</TableCell>
                                     <TableCell>{MATCHING_CATEGORIES.find(c => c.value === matching.category)?.label || matching.category}</TableCell>
-                                    <TableCell>{matching.status}</TableCell>
-                                    <TableCell>{new Date(matching.createdAt).toLocaleString()}</TableCell>
-                                    <TableCell>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                            <img
-                                                src={`${import.meta.env.VITE_API_SERVER_URL}${matching.ownerProfileImage}`}
-                                                alt="프로필"
-                                                style={{ width: 24, height: 24, borderRadius: '50%' }}
-                                            />
-                                            {matching.ownerName}
-                                        </div>
-                                    </TableCell>
+                                    <TableCell>{matching.department}</TableCell>
+                                    <TableCell>{matching.creatorRole === 'SPEAKER' ? '화자' : '청자'}</TableCell>
                                 </tr>
                             ))
                         )}
@@ -191,30 +208,37 @@ const Matching = () => {
                 </Table>
                 {loading && <div style={{ textAlign: 'center', margin: 16 }}>로딩 중...</div>}
                 {error && <div style={{ color: 'red', textAlign: 'center', margin: 16 }}>{error}</div>}
-                {modalMatching && (
-                    <Modal onClick={() => setModalMatching(null)}>
+                {modalDetail && (
+                    <Modal onClick={() => setModalDetail(null)}>
                         <ModalContent onClick={e => e.stopPropagation()}>
                             <h2>매칭 상세</h2>
-                            <p><b>ID:</b> {modalMatching.id}</p>
-                            <p><b>제목:</b> {modalMatching.title}</p>
-                            <p><b>카테고리:</b> {MATCHING_CATEGORIES.find(c => c.value === modalMatching.category)?.label || modalMatching.category}</p>
-                            <p><b>상태:</b> {modalMatching.status}</p>
-                            <p><b>설명:</b> {modalMatching.description}</p>
-                            <p><b>생성일:</b> {new Date(modalMatching.createdAt).toLocaleString()}</p>
+                            <p><b>ID:</b> {modalDetail.id}</p>
+                            <p><b>제목:</b> {modalDetail.title}</p>
+                            <p><b>카테고리:</b> {MATCHING_CATEGORIES.find(c => c.value === modalDetail.category)?.label || modalDetail.category}</p>
+                            <p><b>상태:</b> {modalDetail.status}</p>
+                            <p><b>설명:</b> {modalDetail.description}</p>
+                            <p><b>생성일:</b> {new Date(modalDetail.createdAt).toLocaleString()}</p>
+                            <p><b>대기 인원:</b> {modalDetail.waitingCount}</p>
+                            <p><b>익명 여부:</b> {modalDetail.anonymous ? '예' : '아니오'}</p>
+                            <p><b>학과 표시:</b> {modalDetail.showDepartment ? '예' : '아니오'}</p>
+                            <p><b>생성자 역할:</b> {modalDetail.creatorRole === 'SPEAKER' ? '화자' : '청자'}</p>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '16px 0' }}>
                                 <img
-                                    src={`${import.meta.env.VITE_API_SERVER_URL}${modalMatching.ownerProfileImage}`}
+                                    src={modalDetail.creatorProfileImage ? `https://mindmate.shop/api${modalDetail.creatorProfileImage}` : ''}
                                     alt="프로필"
                                     style={{ width: 48, height: 48, borderRadius: '50%' }}
                                 />
                                 <div>
-                                    <p><b>작성자:</b> {modalMatching.ownerName}</p>
-                                    <p><b>작성자 ID:</b> {modalMatching.ownerId}</p>
+                                    <p><b>생성자:</b> {modalDetail.creatorNickname}</p>
+                                    <p><b>생성자 ID:</b> {modalDetail.creatorId}</p>
+                                    <p><b>생성자 학과:</b> {modalDetail.creatorDepartment}</p>
+                                    <p><b>상담 횟수:</b> {modalDetail.creatorCounselingCount}</p>
+                                    <p><b>평균 평점:</b> {modalDetail.creatorAvgRating}</p>
                                 </div>
                             </div>
                             <ButtonGroup>
-                                <ActionButton variant="reject" onClick={() => handleReject(modalMatching.id)}>반려</ActionButton>
-                                <ActionButton variant="accept" onClick={() => setModalMatching(null)}>닫기</ActionButton>
+                                <ActionButton variant="reject" onClick={() => handleReject(modalDetail.id)}>반려</ActionButton>
+                                <ActionButton variant="accept" onClick={() => setModalDetail(null)}>닫기</ActionButton>
                             </ButtonGroup>
                         </ModalContent>
                     </Modal>
