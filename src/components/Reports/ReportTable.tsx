@@ -161,7 +161,7 @@ const ReportTable = () => {
         try {
             const res = await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/reports/${reportId}`)
             const data = await res.json()
-            setModalReport(data.content?.[0] || null)
+            setModalReport(data)
         } catch {
             setModalReport(null)
         }
