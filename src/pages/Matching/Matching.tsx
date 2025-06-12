@@ -142,19 +142,19 @@ const Matching = () => {
     };
 
     // 반려 처리
-    const handleReject = async (matchingId: number) => {
-        if (!window.confirm('정말 이 매칭을 반려하시겠습니까?')) return;
-        try {
-            await fetchWithRefresh(`https://mindmate.shop/api/admin/matchings/${matchingId}`, {
-                method: 'PATCH',
-            });
-            setModalDetail(null);
-            setPage(0);
-            fetchMatchings(true);
-        } catch {
-            alert('반려 처리에 실패했습니다.');
-        }
-    };
+    // const handleReject = async (matchingId: number) => {
+    //     if (!window.confirm('정말 이 매칭을 반려하시겠습니까?')) return;
+    //     try {
+    //         await fetchWithRefresh(`https://mindmate.shop/api/admin/matchings/${matchingId}`, {
+    //             method: 'PATCH',
+    //         });
+    //         setModalDetail(null);
+    //         setPage(0);
+    //         fetchMatchings(true);
+    //     } catch {
+    //         alert('반려 처리에 실패했습니다.');
+    //     }
+    // };
 
     return (
         <MatchingContainer>
@@ -200,7 +200,7 @@ const Matching = () => {
                                     <TableCell>{matching.title}</TableCell>
                                     <TableCell>{MATCHING_CATEGORIES.find(c => c.value === matching.category)?.label || matching.category}</TableCell>
                                     <TableCell>{matching.department}</TableCell>
-                                    <TableCell>{matching.creatorRole === 'SPEAKER' ? '화자' : '청자'}</TableCell>
+                                    <TableCell>{matching.creatorRole === 'SPEAKER' ? '스피커' : '리스너'}</TableCell>
                                 </tr>
                             ))
                         )}
@@ -237,7 +237,7 @@ const Matching = () => {
                                 </div>
                             </div>
                             <ButtonGroup>
-                                <ActionButton variant="reject" onClick={() => handleReject(modalDetail.id)}>반려</ActionButton>
+                                {/* <ActionButton variant="reject" onClick={() => handleReject(modalDetail.id)}>반려</ActionButton> */}
                                 <ActionButton variant="accept" onClick={() => setModalDetail(null)}>닫기</ActionButton>
                             </ButtonGroup>
                         </ModalContent>

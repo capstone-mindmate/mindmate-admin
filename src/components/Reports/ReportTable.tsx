@@ -161,8 +161,10 @@ const ReportTable = () => {
         try {
             const res = await fetchWithRefresh(`${import.meta.env.VITE_API_SERVER_URL}/admin/reports/${reportId}`)
             const data = await res.json()
+            console.log('상세 데이터:', data)
             setModalReport(data)
-        } catch {
+        } catch (e) {
+            console.error('상세 조회 에러:', e)
             setModalReport(null)
         }
     }
@@ -242,7 +244,7 @@ const ReportTable = () => {
             </table>
             {loading && <div style={{ textAlign: 'center', margin: 16 }}>로딩 중...</div>}
             {error && <div style={{ color: 'red', textAlign: 'center', margin: 16 }}>{error}</div>}
-            {modalReport && (
+            {modalReport && (console.log('모달 렌더링:', modalReport), (
                 <Modal onClick={() => setModalReport(null)}>
                     <ModalContent onClick={e => e.stopPropagation()}>
                         <h2>신고 상세</h2>
@@ -286,7 +288,7 @@ const ReportTable = () => {
                         </ButtonGroup>
                     </ModalContent>
                 </Modal>
-            )}
+            ))}
         </div>
     )
 }
