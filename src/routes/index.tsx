@@ -17,6 +17,7 @@ import Toastbox from "../pages/Toastbox/Toastbox";
 import Filter from "../pages/Filter/Filter";
 import Review from "../pages/Review/Review";
 import Notification from "../pages/Notification/Notification";
+import Matching from "../pages/Matching/Matching";
 
 import { fetchWithRefresh } from "../utils/fetchWithRefresh";
 
@@ -126,6 +127,14 @@ export const router = createBrowserRouter(
       element: (
         <RequireAuth>
           <Report />
+        </RequireAuth>
+      ),
+    },
+    {
+      path: "/matching",
+      element: (
+        <RequireAuth>
+          <Matching />
         </RequireAuth>
       ),
     },

@@ -29,6 +29,7 @@ export default function NavigationComponent() {
   const navigationList = [
     { text: "회원관리", onClick: () => navigate('/users') },
     { text: "신고관리", onClick: () => navigate('/report') },
+    { text: "매칭관리", onClick: () => navigate('/matching') },
     { text: "이모티콘 목록", onClick: () => navigate('/emoticons_list') },
     { text: "이모티콘 관리", onClick: () => navigate('/emoticons') },
     { text: "매거진 수락", onClick: () => navigate('/magazine') },
