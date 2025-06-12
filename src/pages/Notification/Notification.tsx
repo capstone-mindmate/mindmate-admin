@@ -5,7 +5,7 @@ import { fetchWithRefresh } from '../../utils/fetchWithRefresh';
 import { Form, InputGroup, Label, TextInput, SubmitButton, ResultMessage } from "./NotificationStyles";
 
 const Notification = () => {
-    const [form, setForm] = useState({ title: "", announcementId: "" });
+    const [form, setForm] = useState({ title: "", content: "" });
     const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
     const [loading, setLoading] = useState(false);
 
@@ -24,7 +24,7 @@ const Notification = () => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     title: form.title,
-                    announcementId: form.announcementId
+                    content: form.content
                 }),
             });
             if (res.ok) {
@@ -56,10 +56,10 @@ const Notification = () => {
                         />
                     </InputGroup>
                     <InputGroup>
-                        <Label>공지사항 ID</Label>
+                        <Label>내용</Label>
                         <TextInput
-                            name="announcementId"
-                            value={form.announcementId}
+                            name="content"
+                            value={form.content}
                             onChange={handleChange}
                             required
                         />
